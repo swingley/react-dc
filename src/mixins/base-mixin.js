@@ -27,7 +27,7 @@ export default withProps({
   },
   filter: any,
   group: {
-    propTypes: oneOfType([groupShape, shape({
+    propTypes: oneOfType([func, groupShape, shape({
       group: groupShape.isRequired,
       name: string.isRequired
     })]).isRequired,

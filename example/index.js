@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {BarChart, LineChart, PieChart, RowChart, ScatterPlot, SeriesChart, BubbleChart} from '../src/react-dc'
+import {BarChart, LineChart, PieChart, RowChart, ScatterPlot, SeriesChart, BubbleChart, DataTable} from '../src/react-dc'
 import '../dist/react-dc.css'
 import albums from './albums'
 import crossfilter from 'crossfilter'
@@ -18,11 +18,8 @@ const byYear = data.dimension(album => new Date(album.year, 0, 1))
 const byArtistGroup = byArtist.group().reduceCount()
 const byGenreGroup = byGenre.group().reduceCount()
 const byYearGroup = byYear.group().reduceCount()
+const byRank = data.dimension(album => album.rank)
 
-console.log('byYear', byYear.group().all());
-console.log('byArtist', byArtist.group().all());
-console.log('byYearGroup', byYearGroup.all());
-console.log('byArtistGroup', byArtistGroup.all());
 const byArtistAndYear = data.dimension(album => [album.artist, new Date(album.year, 0, 1), album.title])
 const byArtistAndYearGroup = byArtistAndYear.group().reduceSum(album => -album.rank)
 const byArtistAndYearGroupTop10 = {
@@ -48,6 +45,14 @@ const graphs = (
       cap={10}
       othersGrouper={false}
       height={300}
+    />
+    <h3>Data table for albums</h3>
+    <DataTable
+      dimension={byRank}
+      group={d => ''}
+      size={10}
+      columns={['rank', 'year', 'title', 'artist']}
+      sortBy={d => +d.rank}
     />
     <h3>Bubble chart for distribution by year</h3>
     <BubbleChart
